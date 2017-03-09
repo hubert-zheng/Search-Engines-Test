@@ -10,6 +10,7 @@
 //import org.apache.lucene.store.Directory;
 //import org.apache.lucene.store.FSDirectory;
 //import org.apache.lucene.util.Version;
+//import org.wltea.analyzer.lucene.IKAnalyzer;
 //
 ///**
 // * Lucene工具类

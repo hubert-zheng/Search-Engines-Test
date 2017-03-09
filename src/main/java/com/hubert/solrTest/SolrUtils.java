@@ -126,29 +126,33 @@ public class SolrUtils {
 	 * @throws IOException
 	 * @throws SolrServerException
 	 */
-	public static Map<String,Object> search(Map<String, Map<String, Object>> searchMap, int start, int rows)
+	public static Map<String,Object> search(Map<String,List<Map<String,Object>>> searchMap, int start, int rows)
 			throws IOException, SolrServerException {
 		HttpSolrClient client = new HttpSolrClient(serverUrl);
-
 		// 创建查询对象
 		SolrQuery query = new SolrQuery();
 		Set<String> queryKeySets = searchMap.keySet();
 		// 遍历查询条件
 		for (String queryKey : queryKeySets) {
 			// 获取键值对集合
-			Map<String, Object> queryMaps = searchMap.get(queryKey);
-			Set<String> queryMapsKeySets = queryMaps.keySet();
-			Iterator<String> iter = queryMapsKeySets.iterator();
-			String queryMapString = "";
-			while (iter.hasNext()) {
-				String iterNext = iter.next();
-				queryMapString = iterNext + ":" + queryMaps.get(iterNext);
+			List<Map<String, Object>> queryMapsList = searchMap.get(queryKey);
+			for(Map<String,Object> queryMaps:queryMapsList){
+				Set<String> queryMapsKeySets = queryMaps.keySet();
+				Iterator<String> iter = queryMapsKeySets.iterator();
+				String queryMapString = "";
+				while (iter.hasNext()) {
+					String iterNext = iter.next();
+					queryMapString = iterNext + ":" + queryMaps.get(iterNext);
+				}
+				// 设置查询条件 和 键值对
+				query.set(queryKey, queryMapString);
 			}
-			// 设置查询条件 和 键值对
-			query.set(queryKey, queryMapString);
 		}
-		// q 查询字符串，如果查询所有*:*
-		// query.set("q", "EMP_NAME:SMITH");
+		// q 查询字符串，如果查询所有*:*     
+//		query.set("q", "EMP_JOB:SMITH");
+//		query.set("q", "EMP_NAME:SMITH");
+//		query.set("q", "EMP_NAME:CLERK");  //多关键词    不能重复EMP_NAME
+		
 		// fq 过滤条件，过滤是基于查询结果中的过滤
 		// query.set("fq", "EMP_JOB:CLERK");
 		// sort 排序，请注意，如果一个字段没有被索引，那么它是无法排序的
@@ -160,7 +164,7 @@ public class SolrUtils {
 		// query.set("fl", "");
 		// df 默认搜索的域
 		query.set("df", "product_keywords");
-
+		
 		// ======高亮设置===
 		// 开启高亮
 		query.setHighlight(true);

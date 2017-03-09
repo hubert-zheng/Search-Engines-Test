@@ -109,7 +109,7 @@ public class TextFileIndexer {
                  //DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS   索引文档，频率，位置和偏移量。字符偏移编码在位置旁边。
                  pathFieldType.setIndexOptions(IndexOptions.NONE); 
                  pathFieldType.setStored(true);
-                 Field FieldPath =   new  Field( "path", textFiles[i].getPath(),pathFieldType);   
+                 Field FieldPath =   new  Field("path", textFiles[i].getPath(),pathFieldType);   
                  FieldType bodyFieldType = new FieldType();
                  bodyFieldType.setStored(true);
                  bodyFieldType.setIndexOptions(IndexOptions.DOCS);
